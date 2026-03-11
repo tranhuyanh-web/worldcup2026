@@ -456,6 +456,23 @@ export default function App() {
                     {groupedMatches[key].map(match => (
                       <div key={match.id} className="p-4 hover:bg-[#f9f9f9] transition-colors flex flex-col items-center justify-center gap-2">
                         
+                        {/* Top: Group Name & Match Num & Country */}
+                        <div className="text-[12px] md:text-[13px] text-center text-[#757575] w-full">
+                          {(viewMode === 'date' || isKnockout(match.group)) && (
+                            <span>
+                              {viewMode === 'date' && <span>{match.group}</span>}
+                              {isKnockout(match.group) && (
+                                <span>
+                                  {viewMode === 'date' ? ` - ${match.matchNum}` : match.matchNum}
+                                </span>
+                              )}
+                            </span>
+                          )}
+                          <span className="ml-1">
+                            ({getCountryFromLocation(match.location)})
+                          </span>
+                        </div>
+
                         {/* Middle: Teams & Time */}
                         <div className="flex items-center justify-center gap-2 md:gap-4 w-full my-1">
                           {/* Home Team */}
@@ -466,25 +483,8 @@ export default function App() {
                             <img src={getTeamInfo(match.home).flag} alt={match.home} className="w-8 h-5 md:w-10 md:h-6 object-cover border border-gray-200 shrink-0" referrerPolicy="no-referrer" />
                           </div>
                           
-                          {/* Time & Group */}
-                          <div className="flex flex-col items-center justify-center shrink-0 min-w-[100px] md:min-w-[120px]">
-                            {/* Group Name & Match Num & Country */}
-                            <div className="text-[11px] md:text-[12px] text-center mb-1 text-[#757575]">
-                              {(viewMode === 'date' || isKnockout(match.group)) && (
-                                <span>
-                                  {viewMode === 'date' && <span>{match.group}</span>}
-                                  {isKnockout(match.group) && (
-                                    <span>
-                                      {viewMode === 'date' ? ` - ${match.matchNum}` : match.matchNum}
-                                    </span>
-                                  )}
-                                </span>
-                              )}
-                              <span className="ml-1">
-                                ({getCountryFromLocation(match.location)})
-                              </span>
-                            </div>
-
+                          {/* Time */}
+                          <div className="flex flex-col items-center justify-center shrink-0 min-w-[80px] md:min-w-[100px]">
                             <div className="text-[20px] md:text-[28px] font-bold text-[#222] leading-none">
                               {match.datetimeHcm ? match.datetimeHcm.split(' - ')[0] : '??:??'}
                             </div>
