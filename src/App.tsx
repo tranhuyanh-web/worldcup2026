@@ -36,6 +36,7 @@ export default function App() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const appContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -48,7 +49,10 @@ export default function App() {
   // Send height to parent window (VnExpress) to ensure iframe is fully expanded
   useEffect(() => {
     const updateHeight = () => {
-      const height = document.documentElement.scrollHeight;
+      if (!appContainerRef.current) return;
+      // Use offsetHeight of the container to get the true content height,
+      // ignoring the iframe's current height which might be larger.
+      const height = appContainerRef.current.offsetHeight;
       window.parent.postMessage({ type: 'updateHeight', height }, '*');
       window.parent.postMessage({ type: 'resize', height }, '*');
       window.parent.postMessage({ action: 'resize', height }, '*');
@@ -56,14 +60,17 @@ export default function App() {
     };
 
     const observer = new ResizeObserver(updateHeight);
-    observer.observe(document.body);
+    if (appContainerRef.current) {
+      observer.observe(appContainerRef.current);
+    }
     
     updateHeight();
+    setTimeout(updateHeight, 100);
     setTimeout(updateHeight, 500);
     setTimeout(updateHeight, 2000);
 
     return () => observer.disconnect();
-  }, [matches, viewMode]);
+  }, [matches, viewMode, activeGroup, favoriteTeams]);
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
@@ -189,14 +196,8 @@ export default function App() {
       return timeA - timeB;
     });
   } else {
-    sortedKeys.sort((a, b) => {
-      const indexA = groupOrder.indexOf(a);
-      const indexB = groupOrder.indexOf(b);
-      if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-      if (indexA !== -1) return -1;
-      if (indexB !== -1) return 1;
-      return a.localeCompare(b);
-    });
+    // Only show the active group
+    sortedKeys = [activeGroup].filter(group => groupedMatches[group]);
   }
 
   const scrollToElement = (id: string) => {
@@ -261,11 +262,11 @@ export default function App() {
 
   const scrollToGroup = (group: string) => {
     setActiveGroup(group);
-    scrollToElement(`date-group-${group}`);
+    // No need to scroll since it's the only group shown
   };
 
   return (
-    <div className="min-h-screen bg-white font-sans text-[#222]">
+    <div ref={appContainerRef} className="bg-white font-sans text-[#222]">
       <main className="max-w-[720px] mx-auto px-4 py-8">
         {/* Main Content Area */}
         <div className="w-full">
