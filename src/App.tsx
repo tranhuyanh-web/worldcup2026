@@ -215,15 +215,6 @@ export default function App() {
       <main className="max-w-[720px] mx-auto px-4 py-8">
         {/* Main Content Area */}
         <div className="w-full">
-          <div className="mb-6">
-            <h1 className="text-[32px] font-bold mb-4 leading-tight text-[#222]">
-              Lịch thi đấu World Cup 2026
-            </h1>
-            <p className="text-[#4f4f4f] text-[18px] leading-[160%] mb-6">
-              Cập nhật lịch thi đấu chi tiết của VCK World Cup 2026 diễn ra tại Mỹ, Canada và Mexico.
-            </p>
-          </div>
-
           {/* Filters */}
           <div className="mb-8 space-y-6">
             {/* View Mode Toggle */}
@@ -242,61 +233,7 @@ export default function App() {
               </button>
             </div>
 
-            {/* Stage Filter - Only visible in 'date' view */}
-            {viewMode === 'date' && (
-              <div className="relative flex items-center group/slider">
-                {showLeftArrow && (
-                  <button 
-                    onClick={() => scroll('left')}
-                    className="absolute left-0 z-10 w-8 h-8 flex items-center justify-center bg-white border border-[#e5e5e5] rounded-full shadow-sm text-[#4f4f4f] hover:text-[#9f224e] hover:border-[#9f224e] -ml-4 hidden lg:flex"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                )}
-                
-                <div 
-                  ref={scrollContainerRef}
-                  onScroll={handleScroll}
-                  onMouseDown={handleMouseDown}
-                  onMouseLeave={handleMouseLeave}
-                  onMouseUp={handleMouseUp}
-                  onMouseMove={handleMouseMove}
-                  className={`overflow-x-auto pb-2 -mx-4 px-4 lg:mx-0 lg:px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] w-full ${isDragging ? 'cursor-grabbing select-none' : 'cursor-grab'}`}
-                >
-                  <div className="flex gap-2 whitespace-nowrap">
-                    {stages.map(stage => (
-                      <button
-                        key={stage}
-                        onClick={(e) => {
-                          if (dragged) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            return;
-                          }
-                          scrollToStage(stage);
-                        }}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
-                          activeStage === stage 
-                            ? 'bg-[#9f224e] text-white border-[#9f224e]' 
-                            : 'bg-white text-[#4f4f4f] border-[#e5e5e5] hover:border-[#9f224e] hover:text-[#9f224e]'
-                        }`}
-                      >
-                        {stage}
-                      </button>
-                    ))}
-                  </div>
-                </div>
 
-                {showRightArrow && (
-                  <button 
-                    onClick={() => scroll('right')}
-                    className="absolute right-0 z-10 w-8 h-8 flex items-center justify-center bg-white border border-[#e5e5e5] rounded-full shadow-sm text-[#4f4f4f] hover:text-[#9f224e] hover:border-[#9f224e] -mr-4 hidden lg:flex"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                )}
-              </div>
-            )}
 
             {/* Group Filter - Only visible in 'group' view */}
             {viewMode === 'group' && (
