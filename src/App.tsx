@@ -197,8 +197,7 @@ export default function App() {
     if (targetDateKey) {
       const el = document.getElementById(`date-group-${targetDateKey}`);
       if (el) {
-        const y = el.getBoundingClientRect().top + window.scrollY - 20;
-        window.scrollTo({ top: y, behavior: 'smooth' });
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
   };
@@ -213,8 +212,7 @@ export default function App() {
     setActiveGroup(group);
     const el = document.getElementById(`date-group-${group}`);
     if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 20;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
@@ -387,7 +385,7 @@ export default function App() {
           ) : (
             <div className="space-y-8">
               {sortedKeys.map((key) => (
-                <div key={key} id={`date-group-${key}`} className="border border-[#e5e5e5] rounded overflow-hidden">
+                <div key={key} id={`date-group-${key}`} className="border border-[#e5e5e5] rounded overflow-hidden scroll-mt-20">
                   <div className="bg-[#f7f7f7] px-4 py-3 border-b border-[#e5e5e5]">
                     <h2 className="text-[16px] font-bold text-[#9f224e] uppercase">
                       {viewMode === 'date' ? (key.includes('/') ? `Ngày ${key.replace('/2026', '')}` : key) : key}
