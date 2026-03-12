@@ -212,7 +212,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-[#222]">
-      <main className="max-w-[640px] mx-auto px-4 py-8">
+      <main className="max-w-[720px] mx-auto px-4 py-8">
         {/* Main Content Area */}
         <div className="w-full">
           <div className="mb-6">
