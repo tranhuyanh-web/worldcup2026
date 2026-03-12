@@ -453,7 +453,7 @@ export default function App() {
                       <div key={match.id} className="p-4 hover:bg-[#f9f9f9] transition-colors flex flex-col items-center justify-center gap-2">
                         
                         {/* Top: Group Name & Match Num & Country */}
-                        <div className="text-[12px] md:text-[13px] text-center text-[#757575] w-full">
+                        <div className="text-[12px] md:text-[13px] text-left md:text-center text-[#757575] w-full mb-1 md:mb-0">
                           {(viewMode === 'date' || isKnockout(match.group)) && (
                             <span>
                               {viewMode === 'date' && <span>{match.group}</span>}
@@ -469,19 +469,47 @@ export default function App() {
                           </span>
                         </div>
 
-                        {/* Middle: Teams & Time */}
-                        <div className="flex items-center justify-center gap-2 md:gap-4 w-full my-1">
+                        {/* Mobile Layout (2 rows) */}
+                        <div className="flex md:hidden w-full items-center justify-between mt-1">
+                          <div className="flex flex-col gap-3 flex-1">
+                            <div className="flex items-center gap-3">
+                              <img src={getTeamInfo(match.home).flag} alt={match.home} className="w-7 h-5 object-cover border border-gray-200 shrink-0" referrerPolicy="no-referrer" />
+                              <span className={`font-medium text-[15px] text-[#222] leading-snug ${favoriteTeams.includes(match.home) ? 'font-bold text-[#9f224e]' : ''}`}>
+                                {getTeamInfo(match.home).name}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <img src={getTeamInfo(match.away).flag} alt={match.away} className="w-7 h-5 object-cover border border-gray-200 shrink-0" referrerPolicy="no-referrer" />
+                              <span className={`font-medium text-[15px] text-[#222] leading-snug ${favoriteTeams.includes(match.away) ? 'font-bold text-[#9f224e]' : ''}`}>
+                                {getTeamInfo(match.away).name}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end justify-center shrink-0 pl-4 border-l border-[#e5e5e5]">
+                            <div className="text-[20px] font-bold text-[#222] leading-none">
+                              {match.datetimeHcm ? match.datetimeHcm.split(' - ')[0] : '??:??'}
+                            </div>
+                            {viewMode === 'group' && match.dateStr && (
+                              <div className="text-[12px] text-[#757575] mt-1">
+                                {match.dateStr.replace('/2026', '')}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Desktop Layout (1 row) */}
+                        <div className="hidden md:flex items-center justify-center gap-4 w-full my-1">
                           {/* Home Team */}
-                          <div className="flex-1 flex flex-col md:flex-row items-center justify-end gap-2 text-center md:text-right">
-                            <span className={`font-medium text-[15px] md:text-[20px] text-[#222] leading-snug ${favoriteTeams.includes(match.home) ? 'font-bold text-[#9f224e]' : ''}`}>
+                          <div className="flex-1 flex items-center justify-end gap-3 text-right">
+                            <span className={`font-medium text-[20px] text-[#222] leading-snug ${favoriteTeams.includes(match.home) ? 'font-bold text-[#9f224e]' : ''}`}>
                               {getTeamInfo(match.home).name}
                             </span>
-                            <img src={getTeamInfo(match.home).flag} alt={match.home} className="w-8 h-5 md:w-10 md:h-6 object-cover border border-gray-200 shrink-0" referrerPolicy="no-referrer" />
+                            <img src={getTeamInfo(match.home).flag} alt={match.home} className="w-10 h-6 object-cover border border-gray-200 shrink-0" referrerPolicy="no-referrer" />
                           </div>
                           
                           {/* Time */}
-                          <div className="flex flex-col items-center justify-center shrink-0 min-w-[80px] md:min-w-[100px]">
-                            <div className="text-[20px] md:text-[28px] font-bold text-[#222] leading-none">
+                          <div className="flex flex-col items-center justify-center shrink-0 min-w-[100px]">
+                            <div className="text-[28px] font-bold text-[#222] leading-none">
                               {match.datetimeHcm ? match.datetimeHcm.split(' - ')[0] : '??:??'}
                             </div>
                             {viewMode === 'group' && match.dateStr && (
@@ -492,9 +520,9 @@ export default function App() {
                           </div>
                           
                           {/* Away Team */}
-                          <div className="flex-1 flex flex-col-reverse md:flex-row items-center justify-start gap-2 text-center md:text-left">
-                            <img src={getTeamInfo(match.away).flag} alt={match.away} className="w-8 h-5 md:w-10 md:h-6 object-cover border border-gray-200 shrink-0" referrerPolicy="no-referrer" />
-                            <span className={`font-medium text-[15px] md:text-[20px] text-[#222] leading-snug ${favoriteTeams.includes(match.away) ? 'font-bold text-[#9f224e]' : ''}`}>
+                          <div className="flex-1 flex items-center justify-start gap-3 text-left">
+                            <img src={getTeamInfo(match.away).flag} alt={match.away} className="w-10 h-6 object-cover border border-gray-200 shrink-0" referrerPolicy="no-referrer" />
+                            <span className={`font-medium text-[20px] text-[#222] leading-snug ${favoriteTeams.includes(match.away) ? 'font-bold text-[#9f224e]' : ''}`}>
                               {getTeamInfo(match.away).name}
                             </span>
                           </div>
