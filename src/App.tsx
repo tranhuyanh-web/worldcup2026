@@ -45,6 +45,26 @@ export default function App() {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
 
+  // Send height to parent window (VnExpress) to ensure iframe is fully expanded
+  useEffect(() => {
+    const updateHeight = () => {
+      const height = document.documentElement.scrollHeight;
+      window.parent.postMessage({ type: 'updateHeight', height }, '*');
+      window.parent.postMessage({ type: 'resize', height }, '*');
+      window.parent.postMessage({ action: 'resize', height }, '*');
+      window.parent.postMessage({ type: 'vne-update-height', height }, '*');
+    };
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(document.body);
+    
+    updateHeight();
+    setTimeout(updateHeight, 500);
+    setTimeout(updateHeight, 2000);
+
+    return () => observer.disconnect();
+  }, [matches, viewMode]);
+
   const handleScroll = () => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
@@ -179,6 +199,30 @@ export default function App() {
     });
   }
 
+  const scrollToElement = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 20;
+      
+      // Try to tell parent window to scroll (works for VnExpress and other publishers)
+      window.parent.postMessage({ type: 'scroll', top: y }, '*');
+      window.parent.postMessage({ type: 'scrollTo', top: y }, '*');
+      window.parent.postMessage({ action: 'scroll', top: y }, '*');
+      window.parent.postMessage({ type: 'vne-scroll', top: y }, '*');
+      
+      // Fallback: scrollIntoView
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      
+      // Fix iOS Safari bug where scrollIntoView shifts the iframe's internal rendering
+      // Only reset if the iframe is fully expanded (to avoid hiding the element if it's not)
+      setTimeout(() => {
+        if (document.documentElement.scrollHeight <= document.documentElement.clientHeight + 10) {
+          window.scrollTo(0, 0);
+        }
+      }, 50);
+    }
+  };
+
   const scrollToStage = (stage: string) => {
     setActiveStage(stage);
     let targetDateKey = null;
@@ -195,10 +239,7 @@ export default function App() {
     }
     
     if (targetDateKey) {
-      const el = document.getElementById(`date-group-${targetDateKey}`);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      scrollToElement(`date-group-${targetDateKey}`);
     }
   };
 
@@ -210,10 +251,7 @@ export default function App() {
 
   const scrollToGroup = (group: string) => {
     setActiveGroup(group);
-    const el = document.getElementById(`date-group-${group}`);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    scrollToElement(`date-group-${group}`);
   };
 
   return (
