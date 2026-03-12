@@ -125,10 +125,6 @@ export default function App() {
       if (prev.includes(team)) {
         return prev.filter(t => t !== team);
       }
-      if (prev.length >= 5) {
-        alert('Bạn chỉ được chọn tối đa 5 đội');
-        return prev;
-      }
       return [...prev, team];
     });
   };
