@@ -210,16 +210,26 @@ export default function App() {
       window.parent.postMessage({ action: 'scroll', top: y }, '*');
       window.parent.postMessage({ type: 'vne-scroll', top: y }, '*');
       
-      // Fallback: scrollIntoView
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      
-      // Fix iOS Safari bug where scrollIntoView shifts the iframe's internal rendering
-      // Only reset if the iframe is fully expanded (to avoid hiding the element if it's not)
-      setTimeout(() => {
-        if (document.documentElement.scrollHeight <= document.documentElement.clientHeight + 10) {
+      // Check if iframe is fully expanded (no internal scrollbar intended)
+      const isFullyExpanded = document.documentElement.scrollHeight <= window.innerHeight + 100;
+
+      if (isFullyExpanded) {
+        // Lock internal scrolling to force the parent window to scroll instead
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // Unlock and reset after smooth scroll completes
+        setTimeout(() => {
+          document.documentElement.style.overflow = '';
+          document.body.style.overflow = '';
           window.scrollTo(0, 0);
-        }
-      }, 50);
+        }, 800);
+      } else {
+        // Iframe has its own scrollbar, scroll normally
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 
