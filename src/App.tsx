@@ -453,7 +453,7 @@ export default function App() {
                       <div key={match.id} className="p-4 hover:bg-[#f9f9f9] transition-colors flex flex-col items-center justify-center gap-2">
                         
                         {/* Top: Group Name & Match Num & Country */}
-                        <div className="text-[12px] md:text-[13px] text-left md:text-center text-[#757575] w-full mb-1 md:mb-0">
+                        <div className="text-[12px] sm:text-[13px] text-left sm:text-center text-[#757575] w-full mb-1 sm:mb-0">
                           {(viewMode === 'date' || isKnockout(match.group)) && (
                             <span>
                               {viewMode === 'date' && <span>{match.group}</span>}
@@ -470,7 +470,7 @@ export default function App() {
                         </div>
 
                         {/* Mobile Layout (2 rows) */}
-                        <div className="flex md:hidden w-full items-center justify-between mt-1">
+                        <div className="flex sm:hidden w-full items-center justify-between mt-1">
                           <div className="flex flex-col gap-3 flex-1">
                             <div className="flex items-center gap-3">
                               <img src={getTeamInfo(match.home).flag} alt={match.home} className="w-7 h-5 object-cover border border-gray-200 shrink-0" referrerPolicy="no-referrer" />
@@ -498,7 +498,7 @@ export default function App() {
                         </div>
 
                         {/* Desktop Layout (1 row) */}
-                        <div className="hidden md:flex items-center justify-center gap-4 w-full my-1">
+                        <div className="hidden sm:flex items-center justify-center gap-4 w-full my-1">
                           {/* Home Team */}
                           <div className="flex-1 flex items-center justify-end gap-3 text-right">
                             <span className={`font-medium text-[20px] text-[#222] leading-snug ${favoriteTeams.includes(match.home) ? 'font-bold text-[#9f224e]' : ''}`}>
