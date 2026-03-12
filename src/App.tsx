@@ -207,8 +207,16 @@ export default function App() {
     for (const key of sortedKeys) {
       groupedMatches[key].sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
     }
-    sortedKeys = sortedKeys.filter(key => key === activeGroup);
   }
+
+  const scrollToGroup = (group: string) => {
+    setActiveGroup(group);
+    const el = document.getElementById(`date-group-${group}`);
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 20;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white font-sans text-[#222]">
@@ -266,7 +274,7 @@ export default function App() {
                             e.stopPropagation();
                             return;
                           }
-                          setActiveGroup(group);
+                          scrollToGroup(group);
                         }}
                         className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
                           activeGroup === group 
